@@ -1,5 +1,5 @@
 # Build stage
-FROM alpine:3.23 AS build
+FROM alpine:3.20 AS build
 WORKDIR /app
 
 RUN apk add --no-cache nodejs npm
@@ -8,10 +8,10 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build && npm prune --omit=dev
+RUN npm run build
 
 # Production stage
-FROM alpine:3.23 AS runtime
+FROM alpine:3.20 AS runtime
 WORKDIR /app
 
 RUN apk add --no-cache nodejs openssl \
