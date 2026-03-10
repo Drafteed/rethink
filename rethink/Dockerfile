@@ -18,9 +18,9 @@ RUN apk add --no-cache nodejs openssl \
 	&& addgroup -S app \
 	&& adduser -S -G app app
 
-COPY --from=builder /app/package.json /app/package-lock.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+COPY --from=build /app/package.json /app/package-lock.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 COPY config.json /app/data/config.json
 
 RUN chown -R app:app /app
