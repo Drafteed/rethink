@@ -14,18 +14,18 @@ if(process.argv.length === 4 && process.argv[2] === '-message') {
 	process.exit()
 }
 
-if(process.argv.length !== 3) {
+if(process.argv.length !== 4) {
 	console.warn(
 `Usage:
-	tsx packet-parser.ts device-uuid
+	tsx packet-parser.ts config-path device-uuid
 	tsx packet-parser.ts -message HEX-STRING
 `)
 	process.exit()
 }
 
-const deviceId = process.argv[2]
+const [configPath, deviceId] = process.argv.slice(2)
 
-const config = JSON.parse(readFileSync('./config.json').toString('utf-8'))
+const config = JSON.parse(readFileSync(configPath).toString('utf-8'))
 const client = mqtt.connect("mqtt://" + config.hostname + ":" + config.mqtt_port)
 
 client.on('connect', () => {
