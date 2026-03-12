@@ -21,11 +21,11 @@ RUN apk add --no-cache nodejs openssl \
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-COPY config.json /app/data/config.json
+COPY config.json /app/config.json
 
-RUN chown -R app:app /app
+RUN mkdir -p /app/data \
+	&& chown -R app:app /app
 USER app
 
-# NOTE: the port numbers may be modified in config.json !
 EXPOSE 4433 8884 1884 46030 47878 44401
-CMD ["node", "dist/rethink-cloud.js", "/app/data/config.json"]
+CMD ["sh", "-c", "[ -f /app/data/config.json ] || cp /app/config.json /app/data/config.json; exec node dist/rethink-cloud.js /app/data/config.json"]
