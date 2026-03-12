@@ -8,7 +8,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build
+RUN npm run build && npm prune --omit=dev
 
 # Production stage
 FROM alpine:3.20 AS runtime
