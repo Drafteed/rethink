@@ -324,7 +324,7 @@ export class Thinq2Device implements Device {
         // 1. openssl req can't read the private key from stdin directly
         // 2. nodejs passes a socket into the subprocess' stdin
         // 3. opening a socket via /dev/stdin doesn't work on Linux
-        const csr = await subprocess('bash', ['-c', `cat | openssl req -new -key /dev/stdin -subj '/CN=*.clip.com/O=LGE/C=KR'`], privateKey)
+        const csr = await subprocess('sh', ['-c', `cat | openssl req -new -key /dev/stdin -subj '/CN=*.clip.com/O=LGE/C=KR'`], privateKey)
 
         const ciphertext = publicEncrypt({key: otpResponse.publicKey, padding: RSA_PKCS1_PADDING}, Buffer.concat([
             this.nonce, 
