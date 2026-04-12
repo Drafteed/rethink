@@ -103,7 +103,7 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
 
     send(data: string | Buffer) {
         if(Buffer.isBuffer(data))
-            data = data.toString('hex')
+            data = data.toString('hex').toUpperCase()
         
         this.mqtt.publish(this.device.state!.pubTopic, JSON.stringify({
             mid: ++this.mid,
