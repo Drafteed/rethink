@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-        "module": "node16",
-        "moduleResolution": "node16",
-        "outDir": "dist",
-        "allowJs": true,
-        "esModuleInterop": true,
-        "lib": ["es2021"],
-        "target": "es6",
-        "typeRoots": ["./types" ],
-        "strictNullChecks": true,
-    },
+  "compilerOptions": {
+    "module": "node16",
+    "moduleResolution": "node16",
+    "outDir": "dist",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "lib": ["es2021"],
+    "target": "es6",
+    "typeRoots": ["./types"],
+    "strictNullChecks": true
+  },
 
-    "include": [ "./**/*.ts" ],
-    "exclude": [ "node_modules" ]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"]
 }

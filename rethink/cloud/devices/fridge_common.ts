@@ -1,7 +1,7 @@
 export type TemperatureUnit = 'C' | 'F'
 
 export function fridgeRange(temperatureUnit: TemperatureUnit) {
-    if(temperatureUnit === 'F') {
+    if (temperatureUnit === 'F') {
         return {
             unit_of_measurement: '°F',
             min: 33,
@@ -17,7 +17,7 @@ export function fridgeRange(temperatureUnit: TemperatureUnit) {
 }
 
 export function freezerRange(temperatureUnit: TemperatureUnit) {
-    if(temperatureUnit === 'F') {
+    if (temperatureUnit === 'F') {
         return {
             unit_of_measurement: '°F',
             min: -7,
@@ -33,18 +33,12 @@ export function freezerRange(temperatureUnit: TemperatureUnit) {
 }
 
 // the conversion function works the same both ways
-export function convertFridgeTemperature(temperatureUnit: TemperatureUnit, input: number)
-{
-    if(temperatureUnit === 'F')
-        return 44 - input
-    else
-        return 8 - input
+export function convertFridgeTemperature(temperatureUnit: TemperatureUnit, input: number) {
+    if (temperatureUnit === 'F') return 44 - input
+    else return 8 - input
 }
 
-export function convertFreezerTemperature(temperatureUnit: TemperatureUnit, input: number)
-{
-    if(temperatureUnit === 'F')
-        return 6 - input
-    else
-        return -14 - input
+export function convertFreezerTemperature(temperatureUnit: TemperatureUnit, input: number) {
+    if (temperatureUnit === 'F') return 6 - input
+    else return -14 - input
 }

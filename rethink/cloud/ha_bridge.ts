@@ -16,67 +16,63 @@ type T1Factory = new (HA: Connection, thinq: T1Device, metadata: Metadata) => HA
 type T2Factory = new (HA: Connection, thinq: T2Device, metadata: Metadata) => HADevice
 
 const t1deviceTypes: Record<string, T1Factory> = {
-	WTDN3,
+    WTDN3,
 }
 
 const t2deviceTypes: Record<string, T2Factory> = {
-	RAC_056905_WW,
-	WIN_056905_WW,
-	["2REF11EIDA__4"]: Dev_2REF11EIDA__4,
-	["2RES1VE61NFA2"]: Dev_2RES1VE61NFA2,
-	["Y_V8_Y___W.B32QEUK"]: Y_V8_Y___W_B32QEUK,
-	["F_V8_Y___W.B_2QEUK"]: F_V8_Y___W_B_2QEUK
+    RAC_056905_WW,
+    WIN_056905_WW,
+    ['2REF11EIDA__4']: Dev_2REF11EIDA__4,
+    ['2RES1VE61NFA2']: Dev_2RES1VE61NFA2,
+    ['Y_V8_Y___W.B32QEUK']: Y_V8_Y___W_B32QEUK,
+    ['F_V8_Y___W.B_2QEUK']: F_V8_Y___W_B_2QEUK,
 }
 
 class Bridge {
-	haDevices = new Map<string, HADevice>()
-	constructor(readonly HA: Connection) {
-		HA.on('discovery', () => {
-			this.haDevices.forEach((ha) => ha.publishConfig())
-		})
-		HA.on('setProperty', (id: string, prop: string, value: string) => {
-			const ha = this.haDevices.get(id)
-			if(ha)
-				ha.setProperty(prop, value)
-		})
-	}
+    haDevices = new Map<string, HADevice>()
+    constructor(readonly HA: Connection) {
+        HA.on('discovery', () => {
+            this.haDevices.forEach((ha) => ha.publishConfig())
+        })
+        HA.on('setProperty', (id: string, prop: string, value: string) => {
+            const ha = this.haDevices.get(id)
+            if (ha) ha.setProperty(prop, value)
+        })
+    }
 
-	newDevice(thinqdev: AnyDevice) {
-		const meta = thinqdev.meta
-		const oldDevice = this.haDevices.get(thinqdev.id)
-		if(oldDevice)
-			oldDevice.drop()
+    newDevice(thinqdev: AnyDevice) {
+        const meta = thinqdev.meta
+        const oldDevice = this.haDevices.get(thinqdev.id)
+        if (oldDevice) oldDevice.drop()
 
-		let hadevice: HADevice | undefined
+        let hadevice: HADevice | undefined
 
-		if(thinqdev.platform === 'thinq1') {
-			const devclass = t1deviceTypes[meta.modelId]
-			if(devclass)
-				hadevice = new devclass(this.HA, thinqdev, meta)
-		} else if(thinqdev.platform === 'thinq2') {
-			const devclass = t2deviceTypes[meta.modelId]
-			if(devclass)
-				hadevice = new devclass(this.HA, thinqdev, meta)
-		}
+        if (thinqdev.platform === 'thinq1') {
+            const devclass = t1deviceTypes[meta.modelId]
+            if (devclass) hadevice = new devclass(this.HA, thinqdev, meta)
+        } else if (thinqdev.platform === 'thinq2') {
+            const devclass = t2deviceTypes[meta.modelId]
+            if (devclass) hadevice = new devclass(this.HA, thinqdev, meta)
+        }
 
-		if(!hadevice) {
-			console.warn(`${thinqdev.platform} device type ${meta.modelId} unknown`)
-			return
-		}
+        if (!hadevice) {
+            console.warn(`${thinqdev.platform} device type ${meta.modelId} unknown`)
+            return
+        }
 
-		this.haDevices.set(thinqdev.id, hadevice)
-		thinqdev.on('close', () => this.dropDevice(hadevice))
+        this.haDevices.set(thinqdev.id, hadevice)
+        thinqdev.on('close', () => this.dropDevice(hadevice))
 
-		// hadevice.publishConfig() not needed anymore, will usually happen in the devclass constructor - or later
-		hadevice.start()
-	}
+        // hadevice.publishConfig() not needed anymore, will usually happen in the devclass constructor - or later
+        hadevice.start()
+    }
 
-	dropDevice(ha: HADevice) {
-		if(this.haDevices.get(ha.id) === ha) {
-			this.haDevices.delete(ha.id)
-			ha.drop()
-		}
-	}
+    dropDevice(ha: HADevice) {
+        if (this.haDevices.get(ha.id) === ha) {
+            this.haDevices.delete(ha.id)
+            ha.drop()
+        }
+    }
 }
 
 export default Bridge
