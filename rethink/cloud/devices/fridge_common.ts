@@ -48,3 +48,55 @@ export function convertFreezerTemperature(temperatureUnit: TemperatureUnit, inpu
     else
         return -14 - input
 }
+
+// These appear to be shared across various fridge models. The buffer is truncated for lower-end models.
+export const STATUS_FIELDS = [
+    'monStatus',
+    'fridgeSetpoint',     // 44-F or 8-C
+    'freezerSetpoint',    // 6-F or -14-C
+    'expressFreeze',      // 1=off 2=on
+    'freshAirFilter',
+    'smartSaving',
+    'waterFilter',
+    'anyDoorOpen',        // 0=closed 1=open
+    'tempUnit',           // 0=fahrenheit 1=celsius
+    'smartSavingRun',
+    'displayLock',
+    'activeSaving',
+    'ecoFriendly',
+    'convertibleTemp',
+    'sabbathMode',
+    'dualFridge',
+    'expressCool',        // 0=off 1=on
+    'smartCare',          // 0=off 1=on
+    'drawerMode',
+    'pantryMode',
+    'voiceMode',
+    'dispenserMode',
+    'dispenserCapacity',
+    'dispenserUnit',
+    'selfCare',
+    'craftIce',
+    'monDataNumber'
+] as const
+
+export type Status = Record<typeof STATUS_FIELDS[number],number>;
+
+export function unpackStatus(buf: Buffer): Status {
+    let rv = {} as Status
+    STATUS_FIELDS.forEach((key, index) => {
+        if(buf.length > index)
+            rv[key] = buf[index]
+    })
+
+    return rv
+}
+
+export function packStatus(status: Partial<Status>, length: number): Buffer {
+    const rv = Buffer.alloc(length, 0xff)
+    STATUS_FIELDS.forEach((key, index) => {
+        if(status[key] !== undefined) 
+            rv[index] = status[key]
+    })
+    return rv
+}

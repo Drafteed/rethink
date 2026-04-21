@@ -6,7 +6,7 @@ import { allowExtendedType } from '../../util/util.js'
 import AABBDevice from './aabb_device.js'
 import { convertFreezerTemperature, convertFridgeTemperature, freezerRange, fridgeRange, packStatus, Status, TemperatureUnit, unpackStatus } from './fridge_common.js'
 
-const STATUS_LENGTH = 27
+const STATUS_LENGTH = 17
 
 export default class Device extends AABBDevice {
     readonly deviceConfig: DeviceDiscovery
